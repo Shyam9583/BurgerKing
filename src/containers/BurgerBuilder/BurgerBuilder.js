@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import Modal from '../../UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OderSummary';
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -8,6 +10,8 @@ const INGREDIENT_PRICES = {
   meat: 1.3,
   bacon: 0.7,
 };
+
+const DEFAULT_COST = 4;
 
 class BurgerBuilder extends Component {
   state = {
@@ -17,8 +21,17 @@ class BurgerBuilder extends Component {
       cheese: 0,
       meat: 0,
     },
-    totalPrice: 4,
+    totalPrice: DEFAULT_COST,
+    purchasing: false
   };
+
+  dismissModal = () => {
+    this.setState({purchasing: false});
+  }
+
+  purchaseHandler = () => {
+    this.setState({purchasing: true});
+  }
 
   increaseIngredient = (type) => {
     const oldCount = this.state.ingredients[type];
@@ -51,11 +64,15 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <React.Fragment>
+        <Modal show={this.state.purchasing} dismissModal={(this.dismissModal)}>
+          <OrderSummary clicked={this.dismissModal} ingredients={this.state.ingredients}/>
+        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           increased={this.increaseIngredient}
           decreased={this.decreaseIngredient}
           state={this.state}
+          ordered={this.purchaseHandler}
         />
       </React.Fragment>
     );
@@ -63,3 +80,4 @@ class BurgerBuilder extends Component {
 }
 
 export default BurgerBuilder;
+export {DEFAULT_COST};
