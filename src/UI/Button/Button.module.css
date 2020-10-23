@@ -15,7 +15,7 @@
     padding-left: 0;
 }
 
-.SuccessButton {
+.Success {
     background-color: transparent;
     border: none;
     color: white;
@@ -28,7 +28,7 @@
     color: #5c9210;
 }
 
-.DangerButton {
+.Danger {
     background-color: transparent;
     border: none;
     color: white;

@@ -1,0 +1,25 @@
+.Menu {
+    position: relative;
+    display: flex;
+    left: 5px;
+    width: 40px;
+    height: 25px;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.Menu:hover {
+    cursor: pointer;
+}
+
+.Menu span {
+    width: 100%;
+    background-color:white;
+    height: 3px;
+}
+
+@media (min-width: 500px) {
+    .Menu {
+        display: none;
+    }
+}
