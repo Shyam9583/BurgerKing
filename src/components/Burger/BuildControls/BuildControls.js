@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import BuildControl from './BuildControl/BuildControl';
-import classes from './BuildControls.module.css';
-import { DEFAULT_COST } from '../../../containers/BurgerBuilder/BurgerBuilder';
+import BuildControl from "./BuildControl/BuildControl";
+import classes from "./BuildControls.module.css";
+import { DEFAULT_COST } from "../../../containers/BurgerBuilder/BurgerBuilder";
 
 const controls = [
-  { label: 'Meat', type: 'meat' },
-  { label: 'Salad', type: 'salad' },
-  { label: 'Cheese', type: 'cheese' },
-  { label: 'Bacon', type: 'bacon' },
+  { label: "Meat", type: "meat" },
+  { label: "Salad", type: "salad" },
+  { label: "Cheese", type: "cheese" },
+  { label: "Bacon", type: "bacon" },
 ];
 
 const buildControls = (props) => {

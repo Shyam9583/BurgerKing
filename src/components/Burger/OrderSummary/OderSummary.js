@@ -1,5 +1,5 @@
-import React from 'react';
-import Button from '../../../UI/Button/Button';
+import React from "react";
+import Button from "../../../UI/Button/Button";
 
 const orderSummary = (props) => {
   const summary = Object.keys(props.ingredients).map((key) => {
@@ -14,7 +14,7 @@ const orderSummary = (props) => {
     <React.Fragment>
       <h3>Your Order</h3>
       <p>A delicious burger with the following ingredients</p>
-      <ul style={{ textTransform: 'capitalize' }}>{summary}</ul>
+      <ul style={{ textTransform: "capitalize" }}>{summary}</ul>
       <p>
         <strong>Total Price: ${props.totalPrice.toFixed(2)}</strong>
       </p>

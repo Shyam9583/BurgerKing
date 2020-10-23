@@ -1,5 +1,5 @@
-import React from 'react';
-import classes from './ToggleButton.module.css';
+import React from "react";
+import classes from "./ToggleButton.module.css";
 
 const toggleButton = (props) => (
   <div className={classes.Menu} onClick={props.clicked}>

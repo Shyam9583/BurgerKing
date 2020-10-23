@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import Modal from '../../UI/Modal/Modal';
-import OrderSummary from '../../components/Burger/OrderSummary/OderSummary';
+import Modal from "../../UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OderSummary";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -22,16 +22,16 @@ class BurgerBuilder extends Component {
       meat: 0,
     },
     totalPrice: DEFAULT_COST,
-    purchasing: false
+    purchasing: false,
   };
 
   dismissModal = () => {
-    this.setState({purchasing: false});
-  }
+    this.setState({ purchasing: false });
+  };
 
   purchaseHandler = () => {
-    this.setState({purchasing: true});
-  }
+    this.setState({ purchasing: true });
+  };
 
   increaseIngredient = (type) => {
     const oldCount = this.state.ingredients[type];
@@ -64,8 +64,12 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <React.Fragment>
-        <Modal show={this.state.purchasing} dismissModal={(this.dismissModal)}>
-          <OrderSummary clicked={this.dismissModal} ingredients={this.state.ingredients} totalPrice={this.state.totalPrice}/>
+        <Modal show={this.state.purchasing} dismissModal={this.dismissModal}>
+          <OrderSummary
+            clicked={this.dismissModal}
+            ingredients={this.state.ingredients}
+            totalPrice={this.state.totalPrice}
+          />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
@@ -80,4 +84,4 @@ class BurgerBuilder extends Component {
 }
 
 export default BurgerBuilder;
-export {DEFAULT_COST};
+export { DEFAULT_COST };
