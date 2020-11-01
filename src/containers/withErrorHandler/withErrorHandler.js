@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Modal from '../../UI/Modal/Modal';
+import React, { Component } from "react";
+import Modal from "../../UI/Modal/Modal";
 
 const withErrorHandler = (WrappedComponent, axios) => {
   return class extends Component {
@@ -13,14 +13,17 @@ const withErrorHandler = (WrappedComponent, axios) => {
         this.resetError();
         return req;
       });
-      this.responseInterceptor = axios.interceptors.response.use(null, (error) => {
-        this.setError(error);
-      });
+      this.responseInterceptor = axios.interceptors.response.use(
+        null,
+        (error) => {
+          this.setError(error);
+        }
+      );
     }
 
     componentWillUnmount() {
-        axios.interceptors.request.eject(this.requestInterceptor);
-        axios.interceptors.response.eject(this.responseInterceptor);
+      axios.interceptors.request.eject(this.requestInterceptor);
+      axios.interceptors.response.eject(this.responseInterceptor);
     }
 
     resetError = () => this.setState({ error: null });
