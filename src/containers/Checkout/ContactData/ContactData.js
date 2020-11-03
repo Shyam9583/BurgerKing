@@ -3,15 +3,97 @@ import Button from "../../../UI/Button/Button";
 import classes from "./ContactData.module.css";
 import axios from "../../../axios-orders";
 import Spinner from "../../../UI/Spinner/Spinner";
+import Input from "../../../UI/Form/Input/Input";
 
 class ContactData extends Component {
+  formFieldDefault(elementType, elementConfig, validation, defaultValue) {
+    return {
+      elementType,
+      elementConfig,
+      validation,
+      dirty: false,
+      valid: Object.keys(validation).length === 0,
+      value: defaultValue,
+    };
+  }
+
+  formField(elementType, elementConfig, validation) {
+    return {
+      elementType,
+      elementConfig,
+      validation,
+      valid: Object.keys(validation).length === 0,
+      value: "",
+    };
+  }
   state = {
-    name: "",
-    email: "",
-    address: {
-      street: "",
-      postalCode: "",
+    orderForm: {
+      name: this.formField(
+        "input",
+        {
+          type: "text",
+          name: "name",
+          placeholder: "Your Name",
+        },
+        {
+          required: true,
+        }
+      ),
+      email: this.formField(
+        "input",
+        {
+          type: "email",
+          name: "email",
+          placeholder: "Your Email",
+        },
+        {
+          required: true,
+        }
+      ),
+      street: this.formField(
+        "input",
+        {
+          type: "text",
+          name: "street",
+          placeholder: "Your Street",
+        },
+        {
+          required: true,
+        }
+      ),
+      zipCode: this.formField(
+        "input",
+        {
+          type: "text",
+          name: "zipcode",
+          placeholder: "Zip Code",
+        },
+        {
+          required: true,
+          minLength: 5,
+          maxLength: 6,
+        }
+      ),
+      country: this.formFieldDefault(
+        "select",
+        {
+          name: "country",
+          options: ["india", "australia"],
+        },
+        {},
+        "india"
+      ),
+      deliveryMethod: this.formFieldDefault(
+        "select",
+        {
+          name: "delivery",
+          options: ["cheapest", "fastest"],
+        },
+        {},
+        "cheapest"
+      ),
     },
+    isFormValid: false,
     loading: false,
   };
 
@@ -29,15 +111,15 @@ class ContactData extends Component {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
       customer: {
-        name: "Shyam Sahoo",
+        name: this.state.orderForm.name.value,
         address: {
-          street: "Sector 19",
-          zipCode: "769005",
-          country: "India",
+          street: this.state.orderForm.street.value,
+          zipCode: this.state.orderForm.zipCode.value,
+          country: this.state.orderForm.country.value,
         },
-        email: "strikerallin1@gmail.com",
+        email: this.state.orderForm.email.value,
       },
-      deliveryMethod: "fastest",
+      deliveryMethod: this.state.orderForm.deliveryMethod.value,
     };
     this.startLoading();
     axios
@@ -52,14 +134,56 @@ class ContactData extends Component {
       });
   };
 
+  changeHandler = (event, field) => {
+    event.preventDefault();
+    const orderForm = { ...this.state.orderForm };
+    orderForm[field].dirty = true;
+    orderForm[field].value = event.target.value;
+    orderForm[field].valid = this.isInputValid(
+      event.target.value,
+      orderForm[field].validation
+    );
+    let validity = true;
+    for (let key in orderForm) {
+      validity = orderForm[key].valid && validity;
+    }
+    this.setState({ orderForm: orderForm, isFormValid: validity });
+  };
+
+  isInputValid = (value, rules) => {
+    let validity = true;
+    if (rules.required) {
+      validity = value.trim() !== "" && validity;
+    }
+    if (rules.minLength) {
+      validity = value.length >= rules.minLength && validity;
+    }
+    if (rules.maxLength) {
+      validity = value.length <= rules.maxLength && validity;
+    }
+    return validity;
+  };
+
   render() {
+    const formFields = Object.keys(this.state.orderForm).map((field) => (
+      <Input
+        changed={(event) => this.changeHandler(event, field)}
+        key={field}
+        inputType={this.state.orderForm[field].elementType}
+        elementConfig={this.state.orderForm[field].elementConfig}
+        value={this.state.orderForm[field].value}
+        dirty={this.state.orderForm[field].dirty}
+        valid={this.state.orderForm[field].valid}
+      />
+    ));
     let form = (
-      <form>
-        <input type="text" name="name" placeholder="Your Name" />
-        <input type="email" name="email" placeholder="Your Email" />
-        <input type="text" name="street" placeholder="Street" />
-        <input type="text" name="postalCode" placeholder="Postal Code" />
-        <Button buttonType="Success" clicked={this.orderHandler}>
+      <form onSubmit={(event) => event.preventDefault()}>
+        {formFields}
+        <Button
+          buttonType="Success"
+          clicked={this.orderHandler}
+          disabled={!this.state.isFormValid}
+        >
           ORDER
         </Button>
       </form>

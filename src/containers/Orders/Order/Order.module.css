@@ -18,3 +18,9 @@
   padding: 5px;
   text-transform: capitalize;
 }
+
+@media (min-width: 700px) {
+  .Order {
+    width: 600px;
+  }
+}

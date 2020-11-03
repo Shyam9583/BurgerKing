@@ -40,3 +40,7 @@
   font-weight: bold;
   color: #944317;
 }
+
+.Button:disabled {
+  color: rgba(37, 31, 31, 0.459);
+}

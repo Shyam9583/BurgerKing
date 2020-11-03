@@ -24,13 +24,22 @@ class BurgerBuilder extends Component {
     loading: false,
   };
 
+  _isMounted = false;
+
   componentDidMount() {
+    this._isMounted = true;
     axios
       .get("/ingredients.json")
       .then((response) => {
-        this.setState({ ingredients: response.data });
+        if (this._isMounted) {
+          this.setState({ ingredients: response.data });
+        }
       })
-      .catch((error) => {});
+      .catch((error) => console.log(error));
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   dismissModal = () => {
