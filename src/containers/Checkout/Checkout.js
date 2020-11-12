@@ -1,34 +1,35 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
-import { DEFAULT_COST } from "../BurgerBuilder/BurgerBuilder";
 import ContactData from "./ContactData/ContactData";
-class Checkout extends Component {
-  state = {
-    ingredients: {
-      salad: 0,
-      meat: 0,
-      cheese: 0,
-      bacon: 0,
-    },
-    totalPrice: DEFAULT_COST,
-  };
+import { connect } from "react-redux";
 
-  componentDidMount() {
-    const ingredients = {};
-    const searchString = this.props.location.search;
-    const query = searchString.substring(searchString.indexOf("?") + 1);
-    query.split("&").forEach((item) => {
-      const position = item.indexOf("=");
-      if (item.substring(0, position) === "price") {
-        this.setState({ totalPrice: +item.substring(position + 1) });
-      } else
-        ingredients[item.substring(0, position)] = +item.substring(
-          position + 1
-        );
-    });
-    this.setState({ ingredients: ingredients });
-  }
+class Checkout extends Component {
+  // state = {
+  //   ingredients: {
+  //     salad: 0,
+  //     meat: 0,
+  //     cheese: 0,
+  //     bacon: 0,
+  //   },
+  //   totalPrice: DEFAULT_COST,
+  // };
+
+  // componentDidMount() {
+  //   const ingredients = {};
+  //   const searchString = this.props.location.search;
+  //   const query = searchString.substring(searchString.indexOf("?") + 1);
+  //   query.split("&").forEach((item) => {
+  //     const position = item.indexOf("=");
+  //     if (item.substring(0, position) === "price") {
+  //       this.setState({ totalPrice: +item.substring(position + 1) });
+  //     } else
+  //       ingredients[item.substring(0, position)] = +item.substring(
+  //         position + 1
+  //       );
+  //   });
+  //   this.setState({ ingredients: ingredients });
+  // }
 
   checkoutCancelledHandler = () => {
     this.props.history.goBack();
@@ -42,7 +43,7 @@ class Checkout extends Component {
     return (
       <div>
         <CheckoutSummary
-          ingredients={this.state.ingredients}
+          ingredients={this.props.ingredients}
           checkoutCancelled={this.checkoutCancelledHandler}
           checkoutContinued={this.checkoutContinuedHandler}
         />
@@ -51,8 +52,8 @@ class Checkout extends Component {
           exact
           render={(props) => (
             <ContactData
-              totalPrice={this.state.totalPrice}
-              ingredients={this.state.ingredients}
+              totalPrice={this.props.totalPrice}
+              ingredients={this.props.ingredients}
               {...props}
             />
           )}
@@ -62,4 +63,11 @@ class Checkout extends Component {
   }
 }
 
-export default Checkout;
+const stateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice,
+  };
+};
+
+export default connect(stateToProps)(Checkout);
