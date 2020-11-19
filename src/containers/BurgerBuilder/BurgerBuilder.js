@@ -7,7 +7,7 @@ import axios from "../../axios-orders";
 import Spinner from "../../UI/Spinner/Spinner";
 import withErrorHandler from "../withErrorHandler/withErrorHandler";
 import { connect } from "react-redux";
-import * as actionTypes from "../../store/actions";
+import * as actions from "../../store/actions/index";
 
 export const DEFAULT_COST = 4;
 
@@ -17,23 +17,10 @@ class BurgerBuilder extends Component {
     loading: false,
   };
 
-  // _isMounted = false;
-
-  // componentDidMount() {
-  //   this._isMounted = true;
-  //   axios
-  //     .get("/ingredients.json")
-  //     .then((response) => {
-  //       if (this._isMounted) {
-  //         this.setState({ ingredients: response.data });
-  //       }
-  //     })
-  //     .catch((error) => console.log(error));
-  // }
-
-  // componentWillUnmount() {
-  //   this._isMounted = false;
-  // }
+  componentDidMount() {
+    this.props.onInitIngredients();
+    this.props.onOrderReset();
+  }
 
   dismissModal = () => {
     this.setState({ purchasing: false });
@@ -106,25 +93,22 @@ class BurgerBuilder extends Component {
 
 const stateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice,
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
   };
 };
 
 const dispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingredientName) => {
-      dispatch({
-        type: actionTypes.ADD_INGREDIENT,
-        payload: { ingredient: ingredientName },
-      });
+      dispatch(actions.addIngredient(ingredientName));
     },
     onIngredientRemoved: (ingredientName) => {
-      dispatch({
-        type: actionTypes.REMOVE_INGREDIENT,
-        payload: { ingredient: ingredientName },
-      });
+      dispatch(actions.removeIngredient(ingredientName));
     },
+    onInitIngredients: () => dispatch(actions.initIngredients()),
+    onOrderReset: () => dispatch(actions.resetOrder()),
   };
 };
 

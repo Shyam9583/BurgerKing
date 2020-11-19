@@ -1,13 +1,10 @@
-import * as actionTypes from "./actions";
+import { DEFAULT_COST } from "../../containers/BurgerBuilder/BurgerBuilder";
+import * as actionTypes from "../actions/actionsTypes";
 
 const initialState = {
-  ingredients: {
-    salad: 0,
-    meat: 0,
-    bacon: 0,
-    cheese: 0,
-  },
-  totalPrice: 4,
+  ingredients: null,
+  totalPrice: DEFAULT_COST,
+  error: false,
 };
 
 const INGREDIENT_PRICES = {
@@ -40,6 +37,22 @@ const reducer = (state = initialState, action) => {
           [action.payload.ingredient]:
             state.ingredients[action.payload.ingredient] - 1,
         },
+      };
+    case actionTypes.SET_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: {
+          salad: action.payload.ingredients.salad,
+          cheese: action.payload.ingredients.cheese,
+          meat: action.payload.ingredients.meat,
+          bacon: action.payload.ingredients.bacon,
+        },
+        totalPrice: DEFAULT_COST,
+      };
+    case actionTypes.SET_ERROR:
+      return {
+        ...state,
+        error: action.payload.error,
       };
     default:
       return state;

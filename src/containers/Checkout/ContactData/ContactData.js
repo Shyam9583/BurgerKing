@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import Button from "../../../UI/Button/Button";
 import classes from "./ContactData.module.css";
-import axios from "../../../axios-orders";
 import Spinner from "../../../UI/Spinner/Spinner";
 import Input from "../../../UI/Form/Input/Input";
+import * as actions from "../../../store/actions/index";
 
 class ContactData extends Component {
   formFieldDefault(elementType, elementConfig, validation, defaultValue) {
@@ -94,15 +95,10 @@ class ContactData extends Component {
       ),
     },
     isFormValid: false,
-    loading: false,
   };
 
   startLoading = () => {
-    this.setState({ loading: true });
-  };
-
-  stopLoading = () => {
-    this.setState({ loading: false });
+    this.props.onSetPurchasing(true);
   };
 
   orderHandler = (event) => {
@@ -122,16 +118,8 @@ class ContactData extends Component {
       deliveryMethod: this.state.orderForm.deliveryMethod.value,
     };
     this.startLoading();
-    axios
-      .post("/orders.json", order)
-      .then(() => {
-        this.stopLoading();
-        this.props.history.replace("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        this.stopLoading();
-      });
+
+    this.props.onPurchaseStart(order);
   };
 
   changeHandler = (event, field) => {
@@ -188,7 +176,7 @@ class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.state.loading) {
+    if (this.props.purchasing) {
       form = <Spinner />;
     }
     return (
@@ -200,4 +188,20 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+const stateToProps = (state) => {
+  return {
+    purchasing: state.order.purchasing,
+    error: state.order.error,
+  };
+};
+
+const dispatchToProps = (dispatch) => {
+  return {
+    onPurchaseStart: (orderData) =>
+      dispatch(actions.purchaseBurgerStart(orderData)),
+    onSetPurchasing: (purchasing) =>
+      dispatch(actions.setPurchasing(purchasing)),
+  };
+};
+
+export default connect(stateToProps, dispatchToProps)(ContactData);
